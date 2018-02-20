@@ -14,6 +14,7 @@ public class App
       SimpleTest testSimple = new SimpleTest();
       testSimple.setUp();
       testSimple.testSimple();
+      System.out.println("Success! The title matches the URL's!");
       testSimple.tearDown();
      } catch (Exception e) {
          System.out.println("Exception occurred:"+e.toString());
