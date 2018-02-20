@@ -20,7 +20,6 @@ public class SimpleTest extends TestCase {
 		System.out.println("Retrieving URL");
 		this.driver.get("http://dlib.nyu.edu/aco/");
 		assertEquals("Arabic Collections Online", this.driver.getTitle());
-		System.out.println("Success! The title matches the URL's!");
 	}
 
 	public void tearDown() throws Exception {
