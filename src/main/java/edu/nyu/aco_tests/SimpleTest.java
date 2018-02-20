@@ -12,7 +12,7 @@ public class SimpleTest extends TestCase {
 
 	public void setUp() throws Exception {
 		System.out.println("Set Up");
-		System.setProperty("webdriver.chrome.driver", "/usr/local/Cellar/chromedriver/2.34/bin/chromedriver");
+		System.setProperty("webdriver.chrome.driver", "/usr/local/Cellar/chromedriver/2.35/bin/chromedriver");
 		driver = new ChromeDriver();
 	}
 
