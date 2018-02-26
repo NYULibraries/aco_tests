@@ -12,9 +12,13 @@ public class App
     {
      try {
       SimpleTest testSimple = new SimpleTest();
-      testSimple.setUp();
-      testSimple.testSimple();
-      System.out.println("Success! The title matches the URL's!");
+      testSimple.setUpChrome();
+      testSimple.testSimpleChrome();
+      System.out.println("Chrome: Success! The title matches the URL's!");
+      testSimple.tearDown();
+      testSimple.setUpFireFox();
+      testSimple.testSimpleFireFox();
+      System.out.println("Firefox: Success! The title matches the URL's!");
       testSimple.tearDown();
      } catch (Exception e) {
          System.out.println("Exception occurred:"+e.toString());
