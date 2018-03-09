@@ -13,13 +13,21 @@ public class App
      try {
       SimpleTest testSimple = new SimpleTest();
       testSimple.setUpChrome();
-      testSimple.testSimpleChrome();
+      testSimple.testSimple();
       System.out.println("Chrome: Success! The title matches the URL's!");
       testSimple.tearDown();
+
+
       testSimple.setUpFireFox();
-      testSimple.testSimpleFireFox();
+      testSimple.testSimple();
       System.out.println("Firefox: Success! The title matches the URL's!");
       testSimple.tearDown();
+
+      testSimple.setUpSafari();
+      testSimple.testSimple();
+      System.out.println("Safari: Success! The title matches the URL's!");
+      testSimple.tearDown();
+
      } catch (Exception e) {
          System.out.println("Exception occurred:"+e.toString());
       }
