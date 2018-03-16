@@ -30,7 +30,7 @@ public class AppTest
      */
     public static Test suite()
     {
-        return new TestSuite( SimpleTest.class );
+        return new TestSuite( Acceptance.class);
     }
 
     /**
@@ -38,13 +38,13 @@ public class AppTest
      */
     public void testApp()
     {
-                System.out.println("Set Up Chrome");
-                System.setProperty("webdriver.chrome.driver", "/usr/local/Cellar/chromedriver/2.34/bin/chromedriver"); 
-                ChromeDriver driver = new ChromeDriver(); 
-    
-                System.out.println("Retrieving URL");
-                driver.get("http://dlib.nyu.edu/aco/");
-                assertEquals("Arabic Collections Online", driver.getTitle());
+//                System.out.println("Set Up Chrome");
+//                System.setProperty("webdriver.chrome.driver", "/usr/local/Cellar/chromedriver/2.34/bin/chromedriver");
+//                ChromeDriver driver = new ChromeDriver();
+//
+//                System.out.println("Retrieving URL");
+//                driver.get("http://dlib.nyu.edu/aco/");
+//                assertEquals("Arabic Collections Online", driver.getTitle());
           //assertTrue( true );
     }
 }
