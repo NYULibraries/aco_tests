@@ -29,15 +29,16 @@ public class Search extends TestCase {
         driver = new ChromeDriver();
     }
 
-    public void testChrome() throws ComparisonFailure{
+    public void testChrome() throws Exception{
         try {
             setUpChrome();
             System.out.println("Retrieving URL");
             this.driver.get("http://dlib.nyu.edu/aco/");
-
+            
             System.out.println("Searching 'kitab'");
             //Search Kitab
-            WebDriverWait wait = new WebDriverWait(driver, 10);
+            int time_out = 10;
+            WebDriverWait wait = new WebDriverWait(driver, time_out);
             wait.until(ExpectedConditions.presenceOfElementLocated(By.className("input-hold")));
 
             WebElement searchBox = this.driver.findElement(By.className("input-hold"));
@@ -54,13 +55,23 @@ public class Search extends TestCase {
 
             //Check result count
             wait.until(ExpectedConditions.presenceOfElementLocated(By.className("numfound")));
-            assertEquals("1352",this.driver.findElement(By.className("numfound")).getText());
+            String numfound = this.driver.findElement(By.className("numfound")).getText();
+            int n = Integer.parseInt(numfound);
+            int min = 1352;
+            boolean t;
+            if (n >= min){
+                t = true;
+            }
+            else{
+                t = false;
+            }
+            assertTrue(t);
             this.driver.quit();
         } catch (Exception e) {
             System.out.println(e);
         }
     }
-//
+
 //    public void setUpFireFox() throws Exception{
 //        System.out.println("Set Up FireFox");
 //        //	System.setProperty("webdriver.firefox.bin","/Applications/Firefox.app/Contents/MacOS/firefox-bin");
