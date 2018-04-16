@@ -23,7 +23,7 @@ import org.openqa.selenium.safari.SafariDriver;
 
 public class Search extends TestCase {
     private WebDriver driver;
-    private int time_out = 20;
+    private int time_out = 10;
     private WebDriverWait wait;
 
 
@@ -64,13 +64,21 @@ public class Search extends TestCase {
         wait = new WebDriverWait(driver, time_out);
     }
 
-    public void testChrome() throws Exception {
+
+    public void testKitab() throws Exception {
         try {
             setUpChrome();
             driver.get("http://dlib.nyu.edu/aco/");
             Search(AnyField, ContainsAny, "kitab", min_num_results_for_kitab);
             driver.quit();
 
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void testNYU() throws Exception {
+        try {
             setUpChrome();
             driver.get("http://dlib.nyu.edu/aco/");
             Search(Provider, Matches,"New York University Libraries", min_num_results_for_new_york_university_libraries);
