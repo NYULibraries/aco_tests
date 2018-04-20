@@ -51,11 +51,12 @@
   <name>aco_tests</name>
   <url>http://maven.apache.org</url>
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-    </dependency>
+     <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+        <scope>test</scope>
+     </dependency>
      <dependency>
         <groupId>org.seleniumhq.selenium</groupId>
         <artifactId>selenium-java</artifactId>
@@ -77,10 +78,10 @@
         <version>1.4.0</version>
     </dependency>
     <dependency>
-	<groupId>org.seleniumhq.selenium</groupId>
-	<artifactId>selenium-chrome-driver</artifactId>
-	<version>2.50.0</version>
-</dependency>  
+	    <groupId>org.seleniumhq.selenium</groupId>
+	    <artifactId>selenium-chrome-driver</artifactId>
+	    <version>2.50.0</version>
+    </dependency>
 
   </dependencies>
 </project>

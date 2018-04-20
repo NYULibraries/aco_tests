@@ -1,9 +1,10 @@
 package edu.nyu.aco_tests;
 
-import junit.framework.ComparisonFailure;
 import junit.framework.TestCase;
 
 //Selectors
+import org.junit.Before;
+import org.junit.Test;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -23,53 +24,70 @@ import org.openqa.selenium.safari.SafariDriver;
 
 public class Search extends TestCase {
     private WebDriver driver;
-    private int time_out = 10;
+    private int timeOut = 10;
     private WebDriverWait wait;
 
+    private int minNumResultsForKitab = 1352;
+    private int minNumResultsForNewYorkUniversityLibraries = 1799;
 
-    private int min_num_results_for_kitab = 1352;
-    private int min_num_results_for_new_york_university_libraries = 1799;
+    private String anyField = "q";
+    private String title = "title";
+    private String author = "author";
+    private String publisher = "publisher";
+    private String placeOfPublication = "pubplace";
+    private String provider = "provider";
+    private String subject = "subject";
 
-    private String AnyField = "q";
-    private String Title = "title";
-    private String Author = "author";
-    private String Publisher = "publisher";
-    private String Place_of_Publication = "pubplace";
-    private String Provider = "provider";
-    private String Subject = "subject";
+    private String containsAny = "containsAny";
+    private String containsAll = "containsAll";
+    private String matches = "matches";
 
-    private String ContainsAny = "containsAny";
-    private String ContainsAll = "containsAll";
-    private String Matches = "matches";
 
     public void setUpChrome() throws Exception {
         System.out.println("Set Up Chrome");
         System.setProperty("webdriver.chrome.driver", "/usr/local/Cellar/chromedriver/2.35/bin/chromedriver");
         driver = new ChromeDriver();
-        wait = new WebDriverWait(driver, time_out);
+        wait = new WebDriverWait(driver, timeOut);
     }
 
-    public void setUpFireFox() throws Exception {
-        System.out.println("Set Up FireFox");
+    @Before
+    public void setUpFirefox() throws Exception {
+        System.out.println("Set Up Firefox");
         //	System.setProperty("webdriver.firefox.bin","/Applications/Firefox.app/Contents/MacOS/firefox-bin");
         System.setProperty("webdriver.gecko.driver", "/usr/local/Cellar/geckodriver/0.19.1/bin/geckodriver");
         driver = new FirefoxDriver();
-        wait = new WebDriverWait(driver, time_out);
+        wait = new WebDriverWait(driver, timeOut);
     }
 
     public void setUpSafari() throws Exception {
         System.out.println("Set Up Safari");
         System.setProperty("webdriver.safari.driver", "/usr/bin/safaridriver");
         driver = new SafariDriver();
-        wait = new WebDriverWait(driver, time_out);
+        wait = new WebDriverWait(driver, timeOut);
     }
 
+    public void setUpBrowser(String browser) throws Exception{
+        if (browser.equals("Chrome")){
+            setUpChrome();
+        }
+        else if (browser.equals("Firefox")){
+            setUpFirefox();
+        }
+        else if (browser.equals("Safari")){
+            setUpSafari();
+        }
+        //Default browser will be chrome
+        else{
+            setUpChrome();
+        }
+
+    }
 
     public void testKitab() throws Exception {
         try {
             setUpChrome();
             driver.get("http://dlib.nyu.edu/aco/");
-            Search(AnyField, ContainsAny, "kitab", min_num_results_for_kitab);
+            Search(anyField, containsAny, "kitab", minNumResultsForKitab);
             driver.quit();
 
         } catch (Exception e) {
@@ -81,7 +99,7 @@ public class Search extends TestCase {
         try {
             setUpChrome();
             driver.get("http://dlib.nyu.edu/aco/");
-            Search(Provider, Matches,"New York University Libraries", min_num_results_for_new_york_university_libraries);
+            Search(provider, matches,"New York University Libraries", minNumResultsForNewYorkUniversityLibraries);
             driver.quit();
 
         } catch (Exception e) {
@@ -90,7 +108,7 @@ public class Search extends TestCase {
     }
 
 
-    public void Search(String field, String scope, String query, int min_num_results){
+    public void Search(String field, String scope, String query, int minNumResults){
 
         System.out.println("Search: " + query);
         System.out.println("Field: " + field);
@@ -119,17 +137,17 @@ public class Search extends TestCase {
         //Check result count
         wait.until(ExpectedConditions.presenceOfElementLocated(By.className("numfound")));
         String numfound = driver.findElement(By.className("numfound")).getText();
-        int number_of_results = Integer.parseInt(numfound);
+        int numberOfResults = Integer.parseInt(numfound);
 
-        boolean greater_than_min;
-        if(number_of_results >=min_num_results) {
-            greater_than_min = true;
+        boolean greaterThanMin;
+        if(numberOfResults >=minNumResults) {
+            greaterThanMin = true;
         }
         else {
-            greater_than_min = false;
+            greaterThanMin = false;
         }
 
-        assertTrue(greater_than_min);
+        assertTrue(greaterThanMin);
 }
 
 //
