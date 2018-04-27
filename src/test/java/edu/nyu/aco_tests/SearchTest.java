@@ -1,7 +1,7 @@
 package edu.nyu.aco_tests;
 
 //Junits
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,8 +28,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
 @RunWith(Parameterized.class)
-
-public class SearchTest extends TestCase {
+public class SearchTest{
     private String browser;
     private WebDriver driver;
     private int timeOut = 10;
@@ -94,17 +93,12 @@ public class SearchTest extends TestCase {
         else if (this.browser.equals("Safari")){
             setUpSafari();
         }
-        //Default browser will be chrome
-        else{
-            setUpChrome();
-        }
-
+        this.driver.get("http://dlib.nyu.edu/aco/");
     }
 
     @Test
     public void testKitab() throws Exception {
         try {
-            driver.get("http://dlib.nyu.edu/aco/");
             Search(anyField, containsAny, "kitab", minNumResultsForKitab);
         } catch (Exception e) {
             System.out.println(e);
@@ -114,7 +108,6 @@ public class SearchTest extends TestCase {
     @Test
     public void testNYU() throws Exception {
         try {
-            driver.get("http://dlib.nyu.edu/aco/");
             Search(provider, matches,"New York University Libraries", minNumResultsForNewYorkUniversityLibraries);
         } catch (Exception e) {
             System.out.println(e);
@@ -124,7 +117,6 @@ public class SearchTest extends TestCase {
     @Test
     public void testCornell() throws Exception{
         try {
-            driver.get("http://dlib.nyu.edu/aco/");
             Search(provider, containsAny, "Cornell", minNumResultsForCornell);
         } catch (Exception e) {
             System.out.println(e);
