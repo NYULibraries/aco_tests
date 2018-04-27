@@ -1,10 +1,16 @@
 package edu.nyu.aco_tests;
 
+//Junits
 import junit.framework.TestCase;
-
-//Selectors
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+
+//Selectors
+
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -20,15 +26,18 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.safari.SafariDriver;
-//To-Do : Parameterize the test
 
-public class Search extends TestCase {
+@RunWith(Parameterized.class)
+
+public class SearchTest extends TestCase {
+    private String browser;
     private WebDriver driver;
     private int timeOut = 10;
     private WebDriverWait wait;
 
     private int minNumResultsForKitab = 1352;
     private int minNumResultsForNewYorkUniversityLibraries = 1799;
+    private int minNumResultsForCornell = 742;
 
     private String anyField = "q";
     private String title = "title";
@@ -43,6 +52,15 @@ public class Search extends TestCase {
     private String matches = "matches";
 
 
+    public SearchTest(String browser){
+        this.browser = browser;
+    }
+
+    @Parameters
+    public static Object[] data() {
+        return new Object[] { "Chrome", "Firefox", "Safari" };
+    }
+
     public void setUpChrome() throws Exception {
         System.out.println("Set Up Chrome");
         System.setProperty("webdriver.chrome.driver", "/usr/local/Cellar/chromedriver/2.35/bin/chromedriver");
@@ -50,7 +68,6 @@ public class Search extends TestCase {
         wait = new WebDriverWait(driver, timeOut);
     }
 
-    @Before
     public void setUpFirefox() throws Exception {
         System.out.println("Set Up Firefox");
         //	System.setProperty("webdriver.firefox.bin","/Applications/Firefox.app/Contents/MacOS/firefox-bin");
@@ -66,14 +83,15 @@ public class Search extends TestCase {
         wait = new WebDriverWait(driver, timeOut);
     }
 
-    public void setUpBrowser(String browser) throws Exception{
-        if (browser.equals("Chrome")){
+    @Before
+    public void setUp() throws Exception{
+        if (this.browser.equals("Chrome")){
             setUpChrome();
         }
-        else if (browser.equals("Firefox")){
+        else if (this.browser.equals("Firefox")){
             setUpFirefox();
         }
-        else if (browser.equals("Safari")){
+        else if (this.browser.equals("Safari")){
             setUpSafari();
         }
         //Default browser will be chrome
@@ -83,40 +101,48 @@ public class Search extends TestCase {
 
     }
 
+    @Test
     public void testKitab() throws Exception {
         try {
-            setUpChrome();
             driver.get("http://dlib.nyu.edu/aco/");
             Search(anyField, containsAny, "kitab", minNumResultsForKitab);
-            driver.quit();
-
         } catch (Exception e) {
             System.out.println(e);
         }
     }
 
+    @Test
     public void testNYU() throws Exception {
         try {
-            setUpChrome();
             driver.get("http://dlib.nyu.edu/aco/");
             Search(provider, matches,"New York University Libraries", minNumResultsForNewYorkUniversityLibraries);
-            driver.quit();
-
         } catch (Exception e) {
             System.out.println(e);
         }
     }
 
+    @Test
+    public void testCornell() throws Exception{
+        try {
+            driver.get("http://dlib.nyu.edu/aco/");
+            Search(provider, containsAny, "Cornell", minNumResultsForCornell);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    @After
+    public void tearDown() throws Exception{
+        driver.quit();
+    }
 
     public void Search(String field, String scope, String query, int minNumResults){
 
-        System.out.println("Search: " + query);
+        System.out.println("SearchTest: " + query);
         System.out.println("Field: " + field);
         System.out.println("Scope: " + scope);
 
         wait.until(ExpectedConditions.presenceOfElementLocated(By.className("search_holder_advanced")));
-
-
         Select fieldBox = new Select(driver.findElement(By.className("field-select")));
         fieldBox.selectByValue(field);
 
@@ -148,32 +174,7 @@ public class Search extends TestCase {
         }
 
         assertTrue(greaterThanMin);
-}
+    }
 
-//
-//    public void testSimpleFireFox() throws ComparisonFailure{
-//        try {
-//            setUpFireFox();
-//            System.out.println("Retrieving URL");
-//            this.driver.get("http://dlib.nyu.edu/aco/");
-//            assertEquals("Arabic Collections Online", this.driver.getTitle());
-//            this.driver.quit();
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//    }
-//
-
-//    public void testSimpleSafari() throws ComparisonFailure{
-//        try {
-//            setUpSafari();
-//            System.out.println("Retrieving URL");
-//            this.driver.get("http://dlib.nyu.edu/aco/");
-//            assertEquals("Arabic Collections Online", this.driver.getTitle());
-//            this.driver.quit();
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//    }
 }
 
