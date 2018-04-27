@@ -60,39 +60,23 @@ public class SearchTest{
         return new Object[] { "Chrome", "Firefox", "Safari" };
     }
 
-    public void setUpChrome() throws Exception {
-        System.out.println("Set Up Chrome");
-        System.setProperty("webdriver.chrome.driver", "/usr/local/Cellar/chromedriver/2.35/bin/chromedriver");
-        driver = new ChromeDriver();
-        wait = new WebDriverWait(driver, timeOut);
-    }
-
-    public void setUpFirefox() throws Exception {
-        System.out.println("Set Up Firefox");
-        //	System.setProperty("webdriver.firefox.bin","/Applications/Firefox.app/Contents/MacOS/firefox-bin");
-        System.setProperty("webdriver.gecko.driver", "/usr/local/Cellar/geckodriver/0.19.1/bin/geckodriver");
-        driver = new FirefoxDriver();
-        wait = new WebDriverWait(driver, timeOut);
-    }
-
-    public void setUpSafari() throws Exception {
-        System.out.println("Set Up Safari");
-        System.setProperty("webdriver.safari.driver", "/usr/bin/safaridriver");
-        driver = new SafariDriver();
-        wait = new WebDriverWait(driver, timeOut);
-    }
-
     @Before
     public void setUp() throws Exception{
+        System.out.println("Set Up" + this.browser);
         if (this.browser.equals("Chrome")){
-            setUpChrome();
+            System.setProperty("webdriver.chrome.driver", "/usr/local/Cellar/chromedriver/2.35/bin/chromedriver");
+            this.driver = new ChromeDriver();
         }
         else if (this.browser.equals("Firefox")){
-            setUpFirefox();
+            //	System.setProperty("webdriver.firefox.bin","/Applications/Firefox.app/Contents/MacOS/firefox-bin");
+            System.setProperty("webdriver.gecko.driver", "/usr/local/Cellar/geckodriver/0.19.1/bin/geckodriver");
+            this.driver = new FirefoxDriver();
         }
         else if (this.browser.equals("Safari")){
-            setUpSafari();
+            System.setProperty("webdriver.safari.driver", "/usr/bin/safaridriver");
+            this.driver = new SafariDriver();
         }
+        wait = new WebDriverWait(this.driver, timeOut);
         this.driver.get("http://dlib.nyu.edu/aco/");
     }
 
