@@ -9,7 +9,6 @@ import org.openqa.selenium.safari.SafariDriver;
 
 import java.net.URL;
 
-
 public class Acceptance extends TestCase {
     private WebDriver driver;
 
