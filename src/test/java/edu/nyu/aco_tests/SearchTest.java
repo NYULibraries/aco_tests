@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.interactions.Actions;
 
 //Java util
+import java.io.IOException;
 import java.util.List;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -69,8 +70,9 @@ public class SearchTest{
     private int timeOut = 10;
     private WebDriverWait wait;
 
+
     @BeforeClass
-    public static void settingSystemProperties(){
+    public static void setProperties(){
         System.setProperty("webdriver.chrome.driver", "/usr/local/Cellar/chromedriver/2.35/bin/chromedriver");
         //	System.setProperty("webdriver.firefox.bin","/Applications/Firefox.app/Contents/MacOS/firefox-bin");
         System.setProperty("webdriver.gecko.driver", "/usr/local/Cellar/geckodriver/0.19.1/bin/geckodriver");
@@ -79,7 +81,13 @@ public class SearchTest{
 
     //Build searches in the parameters. Uses a jagged two-dimensional array
     @Parameters
-    public static ArrayList<Query> query_data() {
+    public static ArrayList<Query> searches() throws IOException{
+
+        String spreadsheetId = "1zzkk5WzOqCfBjh8j_3lUC_DUW7-_vZCAy_5xJi7Wks8";
+        String range = "Sheet1!B2:E";
+        GoogleSheetAPI sheetAPI = new GoogleSheetAPI();
+       // List<List<Object>> values = sheetAPI.getSpreadSheetRecords(spreadsheetId, range);
+
         int minNumResultsForKitab = 1352;
         int minNumResultsForNewYorkUniversityLibraries = 1799;
         int minNumResultsForCornell = 742;
@@ -98,6 +106,13 @@ public class SearchTest{
         String containsAll = "containsAll";
         String matches = "matches";
 
+//        ArrayList<Query> queries = new ArrayList<Query>();
+//        for (List<Object> row : values) {
+//            System.out.print(row.get(0));
+//            queries.add(new Query(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),Integer.parseInt((String)row.get(3)),"Chrome"));
+//            queries.add(new Query(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),Integer.parseInt((String)row.get(3)),"Firefox"));
+//            queries.add(new Query(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),Integer.parseInt((String)row.get(3)),"Safari"));
+//        }
         //List of queries
         List<Query> queries = Arrays.asList(
                 new Query(anyField, containsAny, "kitab", minNumResultsForKitab),
@@ -114,6 +129,7 @@ public class SearchTest{
             browsersByQueries.add(new Query(query, "Safari"));
         }
         return browsersByQueries;
+   //     return queries;
     }
 
     public SearchTest(Query query_data){
