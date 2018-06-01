@@ -40,11 +40,12 @@ class Query{
     protected String query;
     protected int minNumResults;
 
-    Query(String field, String scope, String query, int minNumResults){
+    Query(String field, String scope, String query, int minNumResults, String browser){
         this.field = field;
         this.scope = scope;
         this.query = query;
         this.minNumResults = minNumResults;
+        this.browser = browser;
     }
 
     //An updated Query with browser included
@@ -83,10 +84,11 @@ public class SearchTest{
     @Parameters
     public static ArrayList<Query> searches() throws IOException{
 
+        // Reference to this Google Sheet https://docs.google.com/spreadsheets/d/1zzkk5WzOqCfBjh8j_3lUC_DUW7-_vZCAy_5xJi7Wks8/edit#gid=0
         String spreadsheetId = "1zzkk5WzOqCfBjh8j_3lUC_DUW7-_vZCAy_5xJi7Wks8";
-        String range = "Sheet1!B2:E";
+        String range = "Sheet1!B2:E3"; //Determines which portion of the google sheet
         GoogleSheetAPI sheetAPI = new GoogleSheetAPI();
-       // List<List<Object>> values = sheetAPI.getSpreadSheetRecords(spreadsheetId, range);
+        List<List<Object>> values = sheetAPI.getSpreadSheetRecords(spreadsheetId, range);
 
         int minNumResultsForKitab = 1352;
         int minNumResultsForNewYorkUniversityLibraries = 1799;
@@ -106,30 +108,29 @@ public class SearchTest{
         String containsAll = "containsAll";
         String matches = "matches";
 
-//        ArrayList<Query> queries = new ArrayList<Query>();
-//        for (List<Object> row : values) {
-//            System.out.print(row.get(0));
-//            queries.add(new Query(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),Integer.parseInt((String)row.get(3)),"Chrome"));
-//            queries.add(new Query(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),Integer.parseInt((String)row.get(3)),"Firefox"));
-//            queries.add(new Query(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),Integer.parseInt((String)row.get(3)),"Safari"));
-//        }
-        //List of queries
-        List<Query> queries = Arrays.asList(
-                new Query(anyField, containsAny, "kitab", minNumResultsForKitab),
-                new Query(provider, matches,"New York University Libraries", minNumResultsForNewYorkUniversityLibraries),
-                new Query(provider, containsAny, "Cornell", minNumResultsForCornell),
-                new Query(provider, matches, "Columbia University Libraries", minNumResultsForColumbia),
-                new Query(provider, matches, "Princeton Unviersity", minNumResultsForPrinceton)
-        );
-
-        ArrayList<Query> browsersByQueries = new ArrayList<Query>();
-        for(Query query : queries) {
-            browsersByQueries.add(new Query(query, "Chrome"));
-            browsersByQueries.add(new Query(query, "Firefox"));
-            browsersByQueries.add(new Query(query, "Safari"));
+        ArrayList<Query> queries = new ArrayList<Query>();
+        for (List<Object> row : values) {
+            queries.add(new Query(String.valueOf(row.get(0)),String.valueOf(row.get(1)),String.valueOf(row.get(2)),Integer.valueOf((String)row.get(3)),"Chrome"));
+            queries.add(new Query(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),Integer.valueOf((String)row.get(3)),"Firefox"));
+            queries.add(new Query(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),Integer.valueOf((String)row.get(3)),"Safari"));
         }
-        return browsersByQueries;
-   //     return queries;
+        //List of queries
+//        List<Query> queries = Arrays.asList(
+//                new Query(anyField, containsAny, "kitab", minNumResultsForKitab),
+//                new Query(provider, matches,"New York University Libraries", minNumResultsForNewYorkUniversityLibraries),
+//                new Query(provider, containsAny, "Cornell", minNumResultsForCornell),
+//                new Query(provider, matches, "Columbia University Libraries", minNumResultsForColumbia),
+//                new Query(provider, matches, "Princeton Unviersity", minNumResultsForPrinceton)
+//        );
+//
+//        ArrayList<Query> browsersByQueries = new ArrayList<Query>();
+//        for(Query query : queries) {
+//            browsersByQueries.add(new Query(query, "Chrome"));
+//            browsersByQueries.add(new Query(query, "Firefox"));
+//            browsersByQueries.add(new Query(query, "Safari"));
+//        }
+//        return browsersByQueries;
+        return queries;
     }
 
     public SearchTest(Query query_data){
@@ -170,7 +171,8 @@ public class SearchTest{
     }
 
     public void Search(){
-        wait.until(ExpectedConditions.elementToBeClickable(By.className("submit-hold")));
+        System.out.println(query);
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.className("field-select")));
         Select fieldBox = new Select(driver.findElement(By.className("field-select")));
         fieldBox.selectByValue(query.field);
 
