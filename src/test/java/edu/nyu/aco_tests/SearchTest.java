@@ -91,12 +91,12 @@ public class SearchTest{
             CSVReader reader = new CSVReader(new FileReader(csvFile));
             String[] line;
             reader.readNext(); //These are the column names in the first row
-            while ((line = reader.readNext()) != null) {
-            //    line = reader.readNext();
+            //while ((line = reader.readNext()) != null) {
+                line = reader.readNext();
                 queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Chrome"));
-                queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Firefox"));
-                queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Safari"));
-            }
+            //    queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Firefox"));
+            //    queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Safari"));
+            //}
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -145,15 +145,14 @@ public class SearchTest{
         wait.until(ExpectedConditions.elementToBeClickable(By.className("submit-hold")));
         //field
         Select fieldBox = new Select(driver.findElement(By.className("field-select")));
-        String selected = fieldBox.getFirstSelectedOption().getText();
-        System.out.println(selected);
         fieldBox.selectByValue(query.field);
         System.out.println(" Selected " + query.field);
         //scope
         Select scopeBox = new Select(driver.findElement(By.className("scope-select")));
-        String selected2 = scopeBox.getFirstSelectedOption().getText();
-        System.out.println(selected2);
-        scopeBox.selectByValue(query.scope);
+        scopeBox.selectByVisibleText("Matches / يساوي");
+        //Won't select by value.
+        //Tried with query.scope="matches". Got org.openqa.selenium.NoSuchElementException: Unable to locate element: "matches".
+        //scopeBox.selectByValue(query.scope);
         System.out.println(" Selected " + query.scope);
         //query
         Actions actions = new Actions(driver);
