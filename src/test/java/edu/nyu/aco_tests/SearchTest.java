@@ -1,5 +1,13 @@
 package edu.nyu.aco_tests;
 
+//Java
+import java.io.IOException;
+import java.util.ArrayList;
+import com.opencsv.CSVReader;
+import java.io.FileNotFoundException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 //Drivers
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -11,11 +19,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.interactions.Actions;
 
-//Java util
-import java.io.IOException;
-import java.util.List;
-import java.util.Arrays;
-import java.util.ArrayList;
+//Selectors
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 //Junits
 import static org.junit.Assert.*;
@@ -26,11 +33,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-
-//Selectors
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 //Query Class
 class Query{
@@ -82,39 +84,23 @@ public class SearchTest{
 
     //Build searches in the parameters. Uses a jagged two-dimensional array
     @Parameters
-    public static ArrayList<Query> searches() throws IOException{
-
-        // Reference to this Google Sheet https://docs.google.com/spreadsheets/d/1zzkk5WzOqCfBjh8j_3lUC_DUW7-_vZCAy_5xJi7Wks8/edit#gid=0
-        String spreadsheetId = "1zzkk5WzOqCfBjh8j_3lUC_DUW7-_vZCAy_5xJi7Wks8";
-        String range = "Sheet1!B2:E3"; //Determines which portion of the google sheet
-        GoogleSheetAPI sheetAPI = new GoogleSheetAPI();
-        List<List<Object>> values = sheetAPI.getSpreadSheetRecords(spreadsheetId, range);
-
-        int minNumResultsForKitab = 1352;
-        int minNumResultsForNewYorkUniversityLibraries = 1799;
-        int minNumResultsForCornell = 742;
-        int minNumResultsForColumbia = 2303;
-        int minNumResultsForPrinceton = 873;
-
-        String anyField = "q";
-        String title = "title";
-        String author = "author";
-        String publisher = "publisher";
-        String placeOfPublication = "pubplace";
-        String provider = "provider";
-        String subject = "subject";
-
-        String containsAny = "containsAny";
-        String containsAll = "containsAll";
-        String matches = "matches";
-
-        ArrayList<Query> queries = new ArrayList<Query>();
-        for (List<Object> row : values) {
-            queries.add(new Query(String.valueOf(row.get(0)),String.valueOf(row.get(1)),String.valueOf(row.get(2)),Integer.valueOf((String)row.get(3)),"Chrome"));
-            queries.add(new Query(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),Integer.valueOf((String)row.get(3)),"Firefox"));
-            queries.add(new Query(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),Integer.valueOf((String)row.get(3)),"Safari"));
-        }
-        //List of queries
+    public static ArrayList<Query> searches() throws IOException {
+//  Explicit parameters method
+//        int minNumResultsForKitab = 1352;
+//        int minNumResultsForNewYorkUniversityLibraries = 1799;
+//        int minNumResultsForCornell = 742;
+//        int minNumResultsForColumbia = 2303;
+//        int minNumResultsForPrinceton = 873;
+//        String anyField = "q";
+//        String title = "title";
+//        String author = "author";
+//        String publisher = "publisher";
+//        String placeOfPublication = "pubplace";
+//        String provider = "provider";
+//        String subject = "subject";
+//        String containsAny = "containsAny";
+//        String containsAll = "containsAll";
+//        String matches = "matches";
 //        List<Query> queries = Arrays.asList(
 //                new Query(anyField, containsAny, "kitab", minNumResultsForKitab),
 //                new Query(provider, matches,"New York University Libraries", minNumResultsForNewYorkUniversityLibraries),
@@ -122,7 +108,6 @@ public class SearchTest{
 //                new Query(provider, matches, "Columbia University Libraries", minNumResultsForColumbia),
 //                new Query(provider, matches, "Princeton Unviersity", minNumResultsForPrinceton)
 //        );
-//
 //        ArrayList<Query> browsersByQueries = new ArrayList<Query>();
 //        for(Query query : queries) {
 //            browsersByQueries.add(new Query(query, "Chrome"));
@@ -130,6 +115,35 @@ public class SearchTest{
 //            browsersByQueries.add(new Query(query, "Safari"));
 //        }
 //        return browsersByQueries;
+
+//  Google Sheet method: https://docs.google.com/spreadsheets/d/1zzkk5WzOqCfBjh8j_3lUC_DUW7-_vZCAy_5xJi7Wks8/edit#gid=0
+//        String spreadsheetId = "1zzkk5WzOqCfBjh8j_3lUC_DUW7-_vZCAy_5xJi7Wks8";
+//        String range = "Sheet1!B2:E3"; //Determines which portion of the google sheet
+//        GoogleSheetAPI sheetAPI = new GoogleSheetAPI();
+//        List<List<Object>> values = sheetAPI.getSpreadSheetRecords(spreadsheetId, range);
+//        ArrayList<Query> queries = new ArrayList<Query>();
+//        for (List<Object> row : values) {
+//            queries.add(new Query(String.valueOf(row.get(0)),String.valueOf(row.get(1)),String.valueOf(row.get(2)),Integer.valueOf((String)row.get(3)),"Chrome"));
+//            queries.add(new Query(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),Integer.valueOf((String)row.get(3)),"Firefox"));
+//            queries.add(new Query(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),Integer.valueOf((String)row.get(3)),"Safari"));
+//        }
+
+//  Reads from csv method
+        String csvFile = "src/test/resources/search_cases.csv";
+        ArrayList<Query> queries = new ArrayList<Query>();
+        try {
+            CSVReader reader = new CSVReader(new FileReader(csvFile));
+            String[] line;
+            reader.readNext(); //These are the column names in the first row
+            while ((line = reader.readNext()) != null) {
+                queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Chrome"));
+                queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Firefox"));
+                queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Safari"));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return queries;
     }
 
@@ -142,6 +156,7 @@ public class SearchTest{
         String browser = this.query.browser;
         System.out.println("Set Up " + browser);
         if (browser.equals("Chrome")){
+            System.setProperty("webdriver.chrome.driver", "/usr/local/Cellar/chromedriver/2.35/bin/chromedriver");
             driver = new ChromeDriver();
         }
         else if (browser.equals("Firefox")){
@@ -172,13 +187,13 @@ public class SearchTest{
 
     public void Search(){
         System.out.println(query);
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.className("field-select")));
+        wait.until(ExpectedConditions.elementToBeClickable(By.className("submit-hold")));
         Select fieldBox = new Select(driver.findElement(By.className("field-select")));
         fieldBox.selectByValue(query.field);
-
+        System.out.println(" Selected " + query.field);
         Select scopeBox = new Select(driver.findElement(By.className("scope-select")));
         scopeBox.selectByValue(query.scope);
-
+        System.out.println(" Selected " + query.scope);
         Actions actions = new Actions(driver);
         actions.moveToElement(driver.findElement(By.className("input-hold")));
         actions.click();
@@ -190,7 +205,7 @@ public class SearchTest{
         System.out.println("       Searching ");
         System.out.println(query);
         //Check result count
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.className("resultsnum")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("resultsnum")));
         String numFound = driver.findElement(By.cssSelector("div[class='resultsnum'] span[class='numfound']")).getText();
 
         int numberOfResults = Integer.parseInt(numFound);

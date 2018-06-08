@@ -1,0 +1,52 @@
+Query ID,Field,Scope,Queries,Minimum Number of Results, Comments
+ nyu,provider,matches ,New york university libraries,1799, 
+,provider ,containsAny ,New york ,1799,
+cornell,provider ,matches ,Cornell university libraries ,742, 
+,provider ,containsAny ,Cornell ,742,
+columbia,provider ,matches ,Columbia university libraries ,2303,
+,provider ,containsAny ,Columbia ,2303,
+princeton,provider ,matches ,Princeton uniersity ,873, 
+,provider ,containsAny ,Princeton,873,
+American University of Beirut,provider ,matches ,American university of beirut ,600, 
+,provider ,containsAny ,American university ,600,
+ibn sina,q ,containsAny ,IBN Sina ,0,
+,q ,containsAny ,ابن سينا ,0,
+avicenna,title ,containsAny ,Avicenna,17,
+,title ,containsAny ,بن سينا,18,DLTSACO-521
+,title ,containsAny ,ابن سينا ,12, 6 less than bin sina because of missing letter 'alef'  in arabic metadata (typo error)
+bukhari,author ,containsAny ,Bukhari,42,
+,author ,containsAny ,Al-Bukari ,0,
+DO not worry about this use case ,publisher ,containsAny ,Maṭba‘at al-Ābā’ al-Yasū‘īyīn,0,the first diacritic is an inverted apostrophe 
+,publisher ,containsAny ,alaba,19,
+,publisher ,containsAny ,matbaat alaba,16,
+,publisher ,containsAny ,aba,28,
+,publisher ,containsAny ,matbaat al-aba,16,
+,publisher ,containsAny ,matbaat alaba alysu,0,WHy?
+,publisher ,containsAny ,alyasu,0,WHY?
+,publisher ,containsAny ,مطبعة الاباء اليسوعي,0,It could not  find hits because the last arabic word is partial
+,publisher ,containsAny ,مطبعة الاباء ,32,it found hits because the search is using  2 complete words but partial full name 
+,title ,containsAny ,quran,12,Different results form qur'an 
+,title ,containsAny ,qur'an,13,Different results from quran
+,pubplace ,containsAny,misr ,1085,re- testing Justin's original cases that rendered no results on 1/11/2017
+,pubplace ,containsAny,egypt ,17,re- testing Justin's original cases that rendered no results on 1/11/2017
+,pubplace ,containsAny ,مصر,1101,re-testing Justins's origina; cases ALmost equal to the sum of results of search by misr and egypt ---good
+,pubplace ,containsAny ,Cairo ,0,
+,pubplace ,containsAny ,Misr,0,
+,pubplace ,containsAny ,Masr,0,
+,pubplace ,containsAny ,Qahira,0,
+,pubplace ,containsAny ,al Qahira,0,
+,pubplace ,containsAny ,al-Qahira,0,
+,pubplace ,containsAny ,القاهرة,0,
+,q ,containsAny,الامامية,0,
+,author ,containsAny ,malik,0,
+,author ,containsAny ,مالك,0,
+,pubplace ,containsAny ,Misr,0,
+,pubplace ,containsAny ,مصر,0,Misr in arabic 
+,q ,containsAny ,kitab,0,
+,q ,containsAny ,كتاب,0,
+,q ,containsAny ,al-imamiya,0,
+,q ,containsAny ,alimamiya,0,
+,q ,containsAny ,al imamiya,0,
+,q ,containsAny ,al-imamiyah,0,
+,q ,containsAny ,al-imam,0,
+,q ,containsAny ,imamiyah,0,

@@ -97,5 +97,10 @@
       <artifactId>google-api-services-sheets</artifactId>
       <version>v4-rev483-1.22.0</version>
     </dependency>
+    <dependency>
+      <groupId>com.opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+      <version>3.8</version>
+</dependency>
   </dependencies>
 </project>
