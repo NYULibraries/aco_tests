@@ -91,12 +91,11 @@ public class SearchTest{
             CSVReader reader = new CSVReader(new FileReader(csvFile));
             String[] line;
             reader.readNext(); //These are the column names in the first row
-            //while ((line = reader.readNext()) != null) {
-                line = reader.readNext();
+            while ((line = reader.readNext()) != null) {
                 queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Chrome"));
-            //    queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Firefox"));
-            //    queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Safari"));
-            //}
+                queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Firefox"));
+                queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Safari"));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
