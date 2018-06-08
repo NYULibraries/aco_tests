@@ -73,7 +73,6 @@ public class SearchTest{
     private int timeOut = 10;
     private WebDriverWait wait;
 
-
     @BeforeClass
     public static void setProperties(){
         System.setProperty("webdriver.chrome.driver", "/usr/local/Cellar/chromedriver/2.35/bin/chromedriver");
@@ -85,49 +84,6 @@ public class SearchTest{
     //Build searches in the parameters. Uses a jagged two-dimensional array
     @Parameters
     public static ArrayList<Query> searches() throws IOException {
-//  Explicit parameters method
-//        int minNumResultsForKitab = 1352;
-//        int minNumResultsForNewYorkUniversityLibraries = 1799;
-//        int minNumResultsForCornell = 742;
-//        int minNumResultsForColumbia = 2303;
-//        int minNumResultsForPrinceton = 873;
-//        String anyField = "q";
-//        String title = "title";
-//        String author = "author";
-//        String publisher = "publisher";
-//        String placeOfPublication = "pubplace";
-//        String provider = "provider";
-//        String subject = "subject";
-//        String containsAny = "containsAny";
-//        String containsAll = "containsAll";
-//        String matches = "matches";
-//        List<Query> queries = Arrays.asList(
-//                new Query(anyField, containsAny, "kitab", minNumResultsForKitab),
-//                new Query(provider, matches,"New York University Libraries", minNumResultsForNewYorkUniversityLibraries),
-//                new Query(provider, containsAny, "Cornell", minNumResultsForCornell),
-//                new Query(provider, matches, "Columbia University Libraries", minNumResultsForColumbia),
-//                new Query(provider, matches, "Princeton Unviersity", minNumResultsForPrinceton)
-//        );
-//        ArrayList<Query> browsersByQueries = new ArrayList<Query>();
-//        for(Query query : queries) {
-//            browsersByQueries.add(new Query(query, "Chrome"));
-//            browsersByQueries.add(new Query(query, "Firefox"));
-//            browsersByQueries.add(new Query(query, "Safari"));
-//        }
-//        return browsersByQueries;
-
-//  Google Sheet method: https://docs.google.com/spreadsheets/d/1zzkk5WzOqCfBjh8j_3lUC_DUW7-_vZCAy_5xJi7Wks8/edit#gid=0
-//        String spreadsheetId = "1zzkk5WzOqCfBjh8j_3lUC_DUW7-_vZCAy_5xJi7Wks8";
-//        String range = "Sheet1!B2:E3"; //Determines which portion of the google sheet
-//        GoogleSheetAPI sheetAPI = new GoogleSheetAPI();
-//        List<List<Object>> values = sheetAPI.getSpreadSheetRecords(spreadsheetId, range);
-//        ArrayList<Query> queries = new ArrayList<Query>();
-//        for (List<Object> row : values) {
-//            queries.add(new Query(String.valueOf(row.get(0)),String.valueOf(row.get(1)),String.valueOf(row.get(2)),Integer.valueOf((String)row.get(3)),"Chrome"));
-//            queries.add(new Query(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),Integer.valueOf((String)row.get(3)),"Firefox"));
-//            queries.add(new Query(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),Integer.valueOf((String)row.get(3)),"Safari"));
-//        }
-
 //  Reads from csv method
         String csvFile = "src/test/resources/search_cases.csv";
         ArrayList<Query> queries = new ArrayList<Query>();
@@ -136,6 +92,7 @@ public class SearchTest{
             String[] line;
             reader.readNext(); //These are the column names in the first row
             while ((line = reader.readNext()) != null) {
+            //    line = reader.readNext();
                 queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Chrome"));
                 queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Firefox"));
                 queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Safari"));
@@ -143,7 +100,6 @@ public class SearchTest{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return queries;
     }
 
@@ -156,7 +112,6 @@ public class SearchTest{
         String browser = this.query.browser;
         System.out.println("Set Up " + browser);
         if (browser.equals("Chrome")){
-            System.setProperty("webdriver.chrome.driver", "/usr/local/Cellar/chromedriver/2.35/bin/chromedriver");
             driver = new ChromeDriver();
         }
         else if (browser.equals("Firefox")){
@@ -175,7 +130,7 @@ public class SearchTest{
         try{
             Search();
         }catch (Exception e) {
-            System.out.println(e);
+            fail(e.toString());
         }
     }
 
@@ -188,12 +143,19 @@ public class SearchTest{
     public void Search(){
         System.out.println(query);
         wait.until(ExpectedConditions.elementToBeClickable(By.className("submit-hold")));
+        //field
         Select fieldBox = new Select(driver.findElement(By.className("field-select")));
+        String selected = fieldBox.getFirstSelectedOption().getText();
+        System.out.println(selected);
         fieldBox.selectByValue(query.field);
         System.out.println(" Selected " + query.field);
+        //scope
         Select scopeBox = new Select(driver.findElement(By.className("scope-select")));
+        String selected2 = scopeBox.getFirstSelectedOption().getText();
+        System.out.println(selected2);
         scopeBox.selectByValue(query.scope);
         System.out.println(" Selected " + query.scope);
+        //query
         Actions actions = new Actions(driver);
         actions.moveToElement(driver.findElement(By.className("input-hold")));
         actions.click();
@@ -204,7 +166,7 @@ public class SearchTest{
 
         System.out.println("       Searching ");
         System.out.println(query);
-        //Check result count
+        //Check result
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("resultsnum")));
         String numFound = driver.findElement(By.cssSelector("div[class='resultsnum'] span[class='numfound']")).getText();
 
