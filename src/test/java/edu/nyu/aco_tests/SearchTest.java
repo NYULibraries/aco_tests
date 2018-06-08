@@ -78,7 +78,6 @@ public class SearchTest{
         System.setProperty("webdriver.chrome.driver", "/usr/local/Cellar/chromedriver/2.35/bin/chromedriver");
         //	System.setProperty("webdriver.firefox.bin","/Applications/Firefox.app/Contents/MacOS/firefox-bin");
         System.setProperty("webdriver.gecko.driver", "/usr/local/Cellar/geckodriver/0.19.1/bin/geckodriver");
-        System.setProperty("webdriver.safari.driver", "/usr/bin/safaridriver");
     }
 
     //Build searches in the parameters. Uses a jagged two-dimensional array
@@ -94,7 +93,6 @@ public class SearchTest{
             while ((line = reader.readNext()) != null) {
                 queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Chrome"));
                 queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Firefox"));
-                queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Safari"));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -115,9 +113,6 @@ public class SearchTest{
         }
         else if (browser.equals("Firefox")){
             driver = new FirefoxDriver();
-        }
-        else if (browser.equals("Safari")){
-            driver = new SafariDriver();
         }
         wait = new WebDriverWait(driver, timeOut);
         driver.get("http://dlib.nyu.edu/aco/");
