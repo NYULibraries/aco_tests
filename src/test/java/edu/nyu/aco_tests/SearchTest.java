@@ -4,8 +4,6 @@ package edu.nyu.aco_tests;
 import java.io.IOException;
 import java.util.ArrayList;
 import com.opencsv.CSVReader;
-import java.io.FileNotFoundException;
-import java.io.BufferedReader;
 import java.io.FileReader;
 
 //Drivers
@@ -22,7 +20,6 @@ import org.openqa.selenium.interactions.Actions;
 //Selectors
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 //Junits
 import static org.junit.Assert.*;
@@ -47,15 +44,6 @@ class Query{
         this.scope = scope;
         this.query = query;
         this.minNumResults = minNumResults;
-        this.browser = browser;
-    }
-
-    //An updated Query with browser included
-    Query(Query withoutBrowser, String browser){
-        this.field = withoutBrowser.field;
-        this.scope = withoutBrowser.scope;
-        this.query = withoutBrowser.query;
-        this.minNumResults = withoutBrowser.minNumResults;
         this.browser = browser;
     }
 
@@ -143,12 +131,12 @@ public class SearchTest{
         System.out.println(" Selected " + query.field);
         //scope
         Select scopeBox = new Select(driver.findElement(By.className("scope-select")));
-        scopeBox.selectByVisibleText("Matches / يساوي");
+        //scopeBox.selectByVisibleText("Matches / يساوي");
         //Won't select by value.
         //Tried with query.scope="matches". Got org.openqa.selenium.NoSuchElementException: Unable to locate element: "matches".
-        //scopeBox.selectByValue(query.scope);
+        scopeBox.selectByValue(query.scope);
         System.out.println(" Selected " + query.scope);
-        //query
+
         Actions actions = new Actions(driver);
         actions.moveToElement(driver.findElement(By.className("input-hold")));
         actions.click();
@@ -165,7 +153,8 @@ public class SearchTest{
 
         int numberOfResults = Integer.parseInt(numFound);
         System.out.print(numberOfResults);
-        assertTrue(numberOfResults >= query.minNumResults);
+        assertTrue("Expected number of results to be greater than " + query.minNumResults +
+                "; got " + numberOfResults + " number of results",numberOfResults >= query.minNumResults);
         System.out.println("     PASS");
     }
 }
