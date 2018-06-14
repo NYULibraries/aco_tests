@@ -5,22 +5,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import com.opencsv.CSVReader;
 import java.io.FileReader;
-
 //Drivers
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.safari.SafariDriver;
-
 //Waits
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.interactions.Actions;
-
 //Selectors
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.By;
-
 //Junits
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
@@ -64,11 +59,10 @@ public class SearchTest{
     @BeforeClass
     public static void setProperties(){
         System.setProperty("webdriver.chrome.driver", "/usr/local/Cellar/chromedriver/2.35/bin/chromedriver");
-        //	System.setProperty("webdriver.firefox.bin","/Applications/Firefox.app/Contents/MacOS/firefox-bin");
         System.setProperty("webdriver.gecko.driver", "/usr/local/Cellar/geckodriver/0.19.1/bin/geckodriver");
     }
 
-    //Build searches in the parameters. Uses a jagged two-dimensional array
+    //Build searches in query parameters.
     @Parameters
     public static ArrayList<Query> searches() throws IOException {
 //  Reads from csv method
@@ -104,7 +98,6 @@ public class SearchTest{
         }
         wait = new WebDriverWait(driver, timeOut);
         driver.get("http://dlib.nyu.edu/aco/");
-        System.out.println("        Home Page Set! ");
     }
 
     @Test
@@ -128,14 +121,11 @@ public class SearchTest{
         //field
         Select fieldBox = new Select(driver.findElement(By.className("field-select")));
         fieldBox.selectByValue(query.field);
-        System.out.println(" Selected " + query.field);
         //scope
         Select scopeBox = new Select(driver.findElement(By.className("scope-select")));
-        //scopeBox.selectByVisibleText("Matches / يساوي");
         //Won't select by value.
         //Tried with query.scope="matches". Got org.openqa.selenium.NoSuchElementException: Unable to locate element: "matches".
         scopeBox.selectByValue(query.scope);
-        System.out.println(" Selected " + query.scope);
 
         Actions actions = new Actions(driver);
         actions.moveToElement(driver.findElement(By.className("input-hold")));
@@ -145,8 +135,6 @@ public class SearchTest{
         actions.click();
         actions.build().perform();
 
-        System.out.println("       Searching ");
-        System.out.println(query);
         //Check result
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("resultsnum")));
         String numFound = driver.findElement(By.cssSelector("div[class='resultsnum'] span[class='numfound']")).getText();
@@ -155,7 +143,6 @@ public class SearchTest{
         System.out.print(numberOfResults);
         assertTrue("Expected number of results to be greater than " + query.minNumResults +
                 "; got " + numberOfResults + " number of results",numberOfResults >= query.minNumResults);
-        System.out.println("     PASS");
     }
 }
 
