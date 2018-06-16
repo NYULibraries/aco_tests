@@ -123,8 +123,6 @@ public class SearchTest{
         fieldBox.selectByValue(query.field);
         //scope
         Select scopeBox = new Select(driver.findElement(By.className("scope-select")));
-        //Won't select by value.
-        //Tried with query.scope="matches". Got org.openqa.selenium.NoSuchElementException: Unable to locate element: "matches".
         scopeBox.selectByValue(query.scope);
 
         Actions actions = new Actions(driver);
@@ -136,11 +134,16 @@ public class SearchTest{
         actions.build().perform();
 
         //Check result
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("resultsnum")));
-        String numFound = driver.findElement(By.cssSelector("div[class='resultsnum'] span[class='numfound']")).getText();
-
-        int numberOfResults = Integer.parseInt(numFound);
-        System.out.print(numberOfResults);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("results-header")));
+        int numberOfResults;
+        //If there isn't a resultsnum webElement, there are no results. set numberOfResults to 0
+        if (driver.findElement(By.cssSelector("div[class='resultsnum']")) == null){
+            numberOfResults = 0;
+        }
+        else {
+            String numFound = driver.findElement(By.cssSelector("div[class='resultsnum'] span[class='numfound']")).getText();
+            numberOfResults = Integer.parseInt(numFound);
+        }
         assertTrue("Expected number of results to be greater than " + query.minNumResults +
                 "; got " + numberOfResults + " number of results",numberOfResults >= query.minNumResults);
     }
