@@ -1,5 +1,7 @@
 package edu.nyu.aco_tests;
 
+import static edu.nyu.aco_tests.Constants.*;
+
 //Java
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,55 +28,33 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-//Query Class
-class Query{
-    protected String browser;
-    protected String field;
-    protected String scope;
-    protected String query;
-    protected int minNumResults;
-
-    Query(String field, String scope, String query, int minNumResults, String browser){
-        this.field = field;
-        this.scope = scope;
-        this.query = query;
-        this.minNumResults = minNumResults;
-        this.browser = browser;
-    }
-
-    @Override
-    public String toString(){
-        return String.format("SearchTest: %s\nField: %s\nScope: %s\nNumber: %d", this.query, this.field, this.scope, this.minNumResults);
-    }
-}
-
 //Test Class
 @RunWith(Parameterized.class)
 public class SearchTest{
     private Query query;
     private WebDriver driver;
-    private int timeOut = 10;
     private WebDriverWait wait;
 
     @BeforeClass
     public static void setProperties(){
-        System.setProperty("webdriver.chrome.driver", "/usr/local/Cellar/chromedriver/2.35/bin/chromedriver");
-        System.setProperty("webdriver.gecko.driver", "/usr/local/Cellar/geckodriver/0.19.1/bin/geckodriver");
+        System.setProperty(chromeDriverKey, chromeDriverValue);
+        System.setProperty(firefoxDriverKey, firefoxDriverValue);
     }
 
     //Build searches in query parameters.
     @Parameters
     public static ArrayList<Query> searches() throws IOException {
 //  Reads from csv method
-        String csvFile = "src/test/resources/search_cases.csv";
+
         ArrayList<Query> queries = new ArrayList<Query>();
         try {
             CSVReader reader = new CSVReader(new FileReader(csvFile));
             String[] line;
             reader.readNext(); //These are the column names in the first row
             while ((line = reader.readNext()) != null) {
-                queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Chrome"));
-                queries.add(new Query(line[1],line[2],line[3],Integer.valueOf(line[4]), "Firefox"));
+                for (String browser : browsers){
+                    queries.add(new Query(line[1].trim(),line[2].trim(),line[3].trim(),Integer.valueOf(line[4].trim()), browser));
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -89,7 +69,7 @@ public class SearchTest{
     @Before
     public void setUp() throws Exception{
         String browser = this.query.browser;
-        System.out.println("Set Up " + browser);
+        System.out.println("SET UP : " + browser);
         if (browser.equals("Chrome")){
             driver = new ChromeDriver();
         }
@@ -97,7 +77,7 @@ public class SearchTest{
             driver = new FirefoxDriver();
         }
         wait = new WebDriverWait(driver, timeOut);
-        driver.get("http://dlib.nyu.edu/aco/");
+        driver.get(homepage);
     }
 
     @Test
@@ -137,7 +117,7 @@ public class SearchTest{
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("results-header")));
         int numberOfResults;
         //If there isn't a resultsnum webElement, there are no results. set numberOfResults to 0
-        if (driver.findElement(By.cssSelector("div[class='resultsnum']")) == null){
+        if (!isElementPresent(By.cssSelector("div[class='resultsnum']"))){
             numberOfResults = 0;
         }
         else {
@@ -146,6 +126,18 @@ public class SearchTest{
         }
         assertTrue("Expected number of results to be greater than " + query.minNumResults +
                 "; got " + numberOfResults + " number of results",numberOfResults >= query.minNumResults);
+    }
+    public boolean isElementPresent(By locatorKey) {
+        try {
+            driver.findElement(locatorKey);
+            return true;
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public boolean isElementVisible(String cssLocator){
+        return driver.findElement(By.cssSelector(cssLocator)).isDisplayed();
     }
 }
 
