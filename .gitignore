@@ -48,7 +48,7 @@ fabric.properties
 .idea
 *.iml
 target/
-src/test/resources/client_secret.json
+src/test/resources/client_secret.jsongi,
 
 # General
 .DS_Store

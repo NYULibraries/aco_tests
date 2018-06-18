@@ -117,7 +117,7 @@ public class SearchTest{
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("results-header")));
         int numberOfResults;
         //If there isn't a resultsnum webElement, there are no results. set numberOfResults to 0
-        if (!isElementPresent(By.cssSelector("div[class='resultsnum']"))){
+        if (!isElementVisible("div[class='resultsnum']")){
             numberOfResults = 0;
         }
         else {
