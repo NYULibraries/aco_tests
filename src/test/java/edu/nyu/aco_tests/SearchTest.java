@@ -114,19 +114,20 @@ public class SearchTest{
         actions.build().perform();
 
         //Check result
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("results-header")));
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div[class='widget items']")));
         int numberOfResults;
+        String numFound;
         //If there isn't a resultsnum webElement, there are no results. set numberOfResults to 0
-        if (!isElementVisible("div[class='resultsnum']")){
-            numberOfResults = 0;
-        }
-        else {
-            String numFound = driver.findElement(By.cssSelector("div[class='resultsnum'] span[class='numfound']")).getText();
+        try {
+            numFound = driver.findElement(By.cssSelector("div[class='resultsnum'] span[class='numfound']")).getText();
             numberOfResults = Integer.parseInt(numFound);
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            numberOfResults = 0;
         }
         assertTrue("Expected number of results to be greater than " + query.minNumResults +
                 "; got " + numberOfResults + " number of results",numberOfResults >= query.minNumResults);
     }
+
     public boolean isElementPresent(By locatorKey) {
         try {
             driver.findElement(locatorKey);
