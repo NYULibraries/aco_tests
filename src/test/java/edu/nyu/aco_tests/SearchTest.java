@@ -128,5 +128,11 @@ public class SearchTest{
                 "; got " + numberOfResults + " number of results",numberOfResults >= query.minNumResults);
     }
 
+    //java logging
+    //junit report
+    //aco-report-{timestamp EST}.csv
+    //Failures
+    //Test , Browser , Expected , Got
+    //Success
 }
 
