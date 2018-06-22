@@ -37,22 +37,21 @@ public class SearchTest{
 
     @BeforeClass
     public static void setProperties(){
-        System.setProperty(chromeDriverKey, chromeDriverValue);
-        System.setProperty(firefoxDriverKey, firefoxDriverValue);
+        System.setProperty(CHROME_DRIVER_KEY, CHROME_DRIVER_VALUE);
+        System.setProperty(FIREFOX_DRIVER_KEY, FIREFOX_DRIVER_VALUE);
     }
 
     //Build searches in query parameters.
     @Parameters
     public static ArrayList<Query> searches(){
 //  Reads from csv method
-
         ArrayList<Query> queries = new ArrayList<Query>();
         try {
-            CSVReader reader = new CSVReader(new FileReader(csvFile));
+            CSVReader reader = new CSVReader(new FileReader(CSV_FILE));
             String[] line;
-            reader.readNext(); //These are the column names in the first row
+            reader.readNext(); //These are the column titles in the first row
             while ((line = reader.readNext()) != null) {
-                for (String browser : browsers){
+                for (String browser : BROWSERS){
                     queries.add(new Query(line[1].trim(),line[2].trim(),line[3].trim(),Integer.valueOf(line[4].trim()), browser));
                 }
             }
@@ -76,14 +75,14 @@ public class SearchTest{
         else if (browser.equals("Firefox")){
             driver = new FirefoxDriver();
         }
-        wait = new WebDriverWait(driver, timeOut);
-        driver.get(homepage);
+        wait = new WebDriverWait(driver, TIME_OUT);
+        driver.get(HOMEPAGE);
     }
 
     @Test
     public void runTest(){
         try{
-            Search();
+            search();
         }catch (Exception e) {
             fail(e.toString());
         }
@@ -95,7 +94,7 @@ public class SearchTest{
         driver.quit();
     }
 
-    private void Search(){
+    private void search(){
         System.out.println(query);
         wait.until(ExpectedConditions.elementToBeClickable(By.className("submit-hold")));
         //field
