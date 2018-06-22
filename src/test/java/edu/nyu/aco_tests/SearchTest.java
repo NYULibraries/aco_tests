@@ -95,7 +95,7 @@ public class SearchTest{
         driver.quit();
     }
 
-    public void Search(){
+    private void Search(){
         System.out.println(query);
         wait.until(ExpectedConditions.elementToBeClickable(By.className("submit-hold")));
         //field
