@@ -1,11 +1,11 @@
 package edu.nyu.aco_tests;
 
 public class Query {
-    protected String browser;
-    protected String field;
-    protected String scope;
-    protected String query;
-    protected int minNumResults;
+    String browser;
+    String field;
+    String scope;
+    String query;
+    int minNumResults;
 
     Query(String field, String scope, String query, int minNumResults, String browser){
         this.field = field;
