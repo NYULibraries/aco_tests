@@ -43,7 +43,7 @@ public class SearchTest{
 
     //Build searches in query parameters.
     @Parameters
-    public static ArrayList<Query> searches() throws IOException {
+    public static ArrayList<Query> searches(){
 //  Reads from csv method
 
         ArrayList<Query> queries = new ArrayList<Query>();
@@ -67,7 +67,7 @@ public class SearchTest{
     }
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp(){
         String browser = this.query.browser;
         System.out.println("SET UP : " + browser);
         if (browser.equals("Chrome")){
@@ -81,7 +81,7 @@ public class SearchTest{
     }
 
     @Test
-    public void runTest() throws Exception{
+    public void runTest(){
         try{
             Search();
         }catch (Exception e) {
@@ -90,7 +90,7 @@ public class SearchTest{
     }
 
     @After
-    public void tearDown() throws Exception{
+    public void tearDown(){
         System.out.println("TEAR DOWN : " + this.query.browser);
         driver.quit();
     }
