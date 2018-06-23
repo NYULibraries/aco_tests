@@ -25,11 +25,11 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.By;
 //Junits
 import static org.junit.Assert.*;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
 import org.junit.Test;
-
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -43,7 +43,7 @@ public class SearchTest{
     private static CSVWriter writer;
 
     @BeforeClass
-    public static void setProperties(){
+    public static void setUpClass(){
         System.setProperty(CHROME_DRIVER_KEY, CHROME_DRIVER_VALUE);
         System.setProperty(FIREFOX_DRIVER_KEY, FIREFOX_DRIVER_VALUE);
         try{
@@ -82,7 +82,7 @@ public class SearchTest{
     }
 
     @Before
-    public void setUp(){
+    public void setUpTest(){
         String browser = this.query.browser;
         System.out.println("SET UP : " + browser);
         if (browser.equals("Chrome")){
@@ -105,13 +105,13 @@ public class SearchTest{
     }
 
     @After
-    public void tearDown(){
+    public void tearDownTest(){
         System.out.println("TEAR DOWN : " + this.query.browser);
         driver.quit();
     }
 
     @AfterClass
-    public void terminateWriter(){
+    public void tearDownClass(){
         try {
             writer.close();
         } catch (IOException e) {
