@@ -4,10 +4,15 @@ import static edu.nyu.aco_tests.Constants.*;
 
 //Java
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
+import java.text.SimpleDateFormat;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.File;
 //Drivers
+import org.junit.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -24,6 +29,7 @@ import org.junit.BeforeClass;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -34,11 +40,21 @@ public class SearchTest{
     private Query query;
     private WebDriver driver;
     private WebDriverWait wait;
+    private static CSVWriter writer;
 
     @BeforeClass
     public static void setProperties(){
         System.setProperty(CHROME_DRIVER_KEY, CHROME_DRIVER_VALUE);
         System.setProperty(FIREFOX_DRIVER_KEY, FIREFOX_DRIVER_VALUE);
+        try{
+            writer = new CSVWriter(new FileWriter(new File(new SimpleDateFormat(OUTPUT+"yyyyMMddHHmm'.csv'").format(new Date()))));
+            String[] entries = "Result#Field#Scope#Query#Browser#Expected#Actual".split("#");
+            writer.writeNext(entries); //first line
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
     //Build searches in query parameters.
@@ -92,6 +108,15 @@ public class SearchTest{
     public void tearDown(){
         System.out.println("TEAR DOWN : " + this.query.browser);
         driver.quit();
+    }
+
+    @AfterClass
+    public void terminateWriter(){
+        try {
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void search(){

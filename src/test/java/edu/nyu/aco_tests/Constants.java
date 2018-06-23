@@ -8,7 +8,7 @@ final class Constants {
     static final int TIME_OUT = 10;
     static final String HOMEPAGE = "http://dlib.nyu.edu/aco/";
     static final String CSV_FILE = "src/test/resources/search_cases.csv";
-
+    static final String OUTPUT = "src/test/resources/aco-report-";
     static final String[] BROWSERS = {"Chrome","Firefox"};
 
     static final String CHROME_DRIVER_KEY = "webdriver.chrome.driver";
