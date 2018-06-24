@@ -41,20 +41,19 @@ public class SearchTest{
     private WebDriver driver;
     private WebDriverWait wait;
     private static CSVWriter writer;
-
+    private int numberOfResults;
     @BeforeClass
     public static void setUpClass(){
         System.setProperty(CHROME_DRIVER_KEY, CHROME_DRIVER_VALUE);
         System.setProperty(FIREFOX_DRIVER_KEY, FIREFOX_DRIVER_VALUE);
         try{
-            writer = new CSVWriter(new FileWriter(new File(new SimpleDateFormat(OUTPUT+"yyyyMMddHHmm'.csv'").format(new Date()))));
+            writer = new CSVWriter(new FileWriter(new File(String.format("%s%s", OUTPUT, new SimpleDateFormat("yyyy-MM-dd HH:mm'.csv'").format(new Date())))));
             String[] entries = "Result#Field#Scope#Query#Browser#Expected#Actual".split("#");
             writer.writeNext(entries); //first line
         }
         catch (IOException e){
             e.printStackTrace();
         }
-
     }
 
     //Build searches in query parameters.
@@ -97,10 +96,16 @@ public class SearchTest{
 
     @Test
     public void runTest(){
+        String result = "";
         try{
             search();
+            result = "Success";
         }catch (Exception e) {
+            result = "Failure";
             fail(e.toString());
+        }finally{
+            String[] log = new String[]{result, query.field, query.scope, query.query, query.browser, String.valueOf(query.minNumResults), String.valueOf(numberOfResults)};
+            writer.writeNext(log);
         }
     }
 
@@ -139,7 +144,7 @@ public class SearchTest{
 
         //Check result
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div[class='widget items']")));
-        int numberOfResults;
+//        int numberOfResults;
         String numFound;
         //If there isn't a resultsnum webElement, there are no results. set numberOfResults to 0
         try {
@@ -148,8 +153,7 @@ public class SearchTest{
         } catch (org.openqa.selenium.NoSuchElementException e) {
             numberOfResults = 0;
         }
-        assertTrue("Expected number of results to be greater than " + query.minNumResults +
-                "; got " + numberOfResults + " number of results",numberOfResults >= query.minNumResults);
+        assertTrue(String.format("Expected number of results to be greater than %d; got %d number of results", query.minNumResults, numberOfResults),numberOfResults >= query.minNumResults);
     }
 
     //java logging
