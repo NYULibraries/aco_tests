@@ -121,7 +121,7 @@ public class SearchTest{
     }
 
     @AfterClass
-    public void tearDownClass(){
+    public static void tearDownClass(){
         try {
             writer.close();
         } catch (IOException e) {
