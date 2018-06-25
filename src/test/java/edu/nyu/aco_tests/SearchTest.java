@@ -74,12 +74,8 @@ public class SearchTest{
         ) {
             for (CSVRecord csvRecord : csvParser) {
                 // Accessing values by Header names
-                String field = csvRecord.get("Field");
-                String scope = csvRecord.get("Scope");
-                String query = csvRecord.get("Queries");
-                int minimumNumberOfResults = Integer.parseInt(csvRecord.get("Minimum Number of Results"));
                 for (String browser : BROWSERS){
-                    queries.add(new Query(field, scope, query, minimumNumberOfResults, browser));
+                    queries.add(new Query(csvRecord.get(FIELD), csvRecord.get(SCOPE), csvRecord.get(QUERIES), Integer.parseInt(csvRecord.get(MINIMUM_NUMER_OF_RESULTS)), browser));
                 }
             }
         }
