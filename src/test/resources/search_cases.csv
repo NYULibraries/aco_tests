@@ -1,4 +1,4 @@
-Query ID,Field,Scope,Queries,Minimum Number of Results, Comments
+ID,Field,Scope,Query,Minimum Number of Results,Comments
  nyu,provider,matches,New york university libraries,1799, 
 ,provider,containsAny,New york,1799,
 cornell,provider,matches,Cornell university libraries,742, 
@@ -13,10 +13,10 @@ ibn sina,q,containsAny,IBN Sina,0,
 ,q,containsAny,ابن سينا,0,
 avicenna,title,containsAny,Avicenna,17,
 ,title,containsAny,بن سينا,18,DLTSACO-521
-,title,containsAny,ابن سينا,12, 6 less than bin sina because of missing letter 'alef'  in arabic metadata (typo error)
+,title,containsAny,ابن سينا,12,6 less than bin sina because of missing letter 'alef'  in arabic metadata (typo error)
 bukhari,author,containsAny,Bukhari,42,
 ,author,containsAny,Al-Bukari,0,
-DO not worry about this use case ,publisher,containsAny,Maṭba‘at al-Ābā’ al-Yasū‘īyīn,0,the first diacritic is an inverted apostrophe 
+DO not worry about this use case ,publisher,containsAny,Maṭba‘at al-Ābā’ al-Yasū‘īyīn,0,the first diacritic is an inverted apostrophe
 ,publisher,containsAny,alaba,19,
 ,publisher,containsAny,matbaat alaba,16,
 ,publisher,containsAny,aba,28,
@@ -24,8 +24,8 @@ DO not worry about this use case ,publisher,containsAny,Maṭba‘at al-Ābā’
 ,publisher,containsAny,matbaat alaba alysu,0,WHy?
 ,publisher,containsAny,alyasu,0,WHY?
 ,publisher,containsAny,مطبعة الاباء اليسوعي,0,It could not  find hits because the last arabic word is partial
-,publisher,containsAny,مطبعة الاباء,32,it found hits because the search is using  2 complete words but partial full name 
-,title,containsAny,quran,12,Different results form qur'an 
+,publisher,containsAny,مطبعة الاباء,32,it found hits because the search is using  2 complete words but partial full name
+,title,containsAny,quran,12,Different results form qur'an
 ,title,containsAny,qur'an,13,Different results from quran
 ,pubplace,containsAny,misr,1085,re- testing Justin's original cases that rendered no results on 1/11/2017
 ,pubplace,containsAny,egypt,17,re- testing Justin's original cases that rendered no results on 1/11/2017

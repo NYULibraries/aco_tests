@@ -70,12 +70,12 @@ public class SearchTest{
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
                     .withFirstRecordAsHeader()
                     .withIgnoreHeaderCase()
-                    .withTrim());
+                    .withTrim())
         ) {
             for (CSVRecord csvRecord : csvParser) {
                 // Accessing values by Header names
                 for (String browser : BROWSERS){
-                    queries.add(new Query(csvRecord.get(FIELD), csvRecord.get(SCOPE), csvRecord.get(QUERIES), Integer.parseInt(csvRecord.get(MINIMUM_NUMER_OF_RESULTS)), browser));
+                    queries.add(new Query(csvRecord.get(FIELD), csvRecord.get(SCOPE), csvRecord.get(QUERY), Integer.parseInt(csvRecord.get(MINIMUM_NUMER_OF_RESULTS)), browser));
                 }
             }
         }
@@ -113,8 +113,13 @@ public class SearchTest{
             result = "Failure";
             fail(e.toString());
         }finally{
-            String[] log = new String[]{result, query.field, query.scope, query.query, query.browser, String.valueOf(query.minNumResults), String.valueOf(numberOfResults)};
-            writer.writeNext(log);
+            try{
+                csvPrinter.printRecord(result, query.field, query.scope, query.query, query.browser, query.minNumResults, numberOfResults);
+                csvPrinter.flush();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
