@@ -64,18 +64,26 @@ public class SearchTest{
     //Build searches in query parameters.
     @Parameters
     public static ArrayList<Query> searches(){
-//  Reads from csv method
         ArrayList<Query> queries = new ArrayList<Query>();
-        try {
-            CSVReader reader = new CSVReader(new FileReader(CSV_FILE));
-            String[] line;
-            reader.readNext(); //These are the column titles in the first row
-            while ((line = reader.readNext()) != null) {
+        try (
+            Reader reader = Files.newBufferedReader(Paths.get(CSV_FILE));
+            CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
+                    .withFirstRecordAsHeader()
+                    .withIgnoreHeaderCase()
+                    .withTrim());
+        ) {
+            for (CSVRecord csvRecord : csvParser) {
+                // Accessing values by Header names
+                String field = csvRecord.get("Field");
+                String scope = csvRecord.get("Scope");
+                String query = csvRecord.get("Queries");
+                int minimumNumberOfResults = Integer.parseInt(csvRecord.get("Minimum Number of Results"));
                 for (String browser : BROWSERS){
-                    queries.add(new Query(line[1].trim(),line[2].trim(),line[3].trim(),Integer.valueOf(line[4].trim()), browser));
+                    queries.add(new Query(field, scope, query, minimumNumberOfResults, browser));
                 }
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
         return queries;
