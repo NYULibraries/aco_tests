@@ -42,16 +42,17 @@ public class SearchTest{
     private Query query;
     private WebDriver driver;
     private WebDriverWait wait;
-    private static CSVWriter writer;
+    private static CSVPrinter csvPrinter;
     private int numberOfResults;
+
     @BeforeClass
     public static void setUpClass(){
         System.setProperty(CHROME_DRIVER_KEY, CHROME_DRIVER_VALUE);
         System.setProperty(FIREFOX_DRIVER_KEY, FIREFOX_DRIVER_VALUE);
-        try{
-            writer = new CSVWriter(new FileWriter(new File(String.format("%s%s", OUTPUT, new SimpleDateFormat("yyyy-MM-dd HH:mm'.csv'").format(new Date())))));
-            String[] entries = "Result#Field#Scope#Query#Browser#Expected#Actual".split("#");
-            writer.writeNext(entries); //first line
+        try {
+            BufferedWriter writer = Files.newBufferedWriter(Paths.get(String.format("%s%s", OUTPUT_FILE, new SimpleDateFormat("yyyy-MM-dd HH:mm'.csv'").format(new Date()))));
+            csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
+                    .withHeader(RESULT, FIELD, SCOPE, QUERY, BROWSER, EXPECTED, ACTUAL));
         }
         catch (IOException e){
             e.printStackTrace();
@@ -129,7 +130,7 @@ public class SearchTest{
     @AfterClass
     public static void tearDownClass(){
         try {
-            writer.close();
+            csvPrinter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -155,23 +156,13 @@ public class SearchTest{
 
         //Check result
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div[class='widget items']")));
-//        int numberOfResults;
-        String numFound;
-        //If there isn't a resultsnum webElement, there are no results. set numberOfResults to 0
         try {
-            numFound = driver.findElement(By.cssSelector("div[class='resultsnum'] span[class='numfound']")).getText();
+            String numFound = driver.findElement(By.cssSelector("div[class='resultsnum'] span[class='numfound']")).getText();
             numberOfResults = Integer.parseInt(numFound);
         } catch (org.openqa.selenium.NoSuchElementException e) {
             numberOfResults = 0;
         }
         assertTrue(String.format("Expected number of results to be greater than %d; got %d number of results", query.minNumResults, numberOfResults),numberOfResults >= query.minNumResults);
     }
-
-    //java logging
-    //junit report
-    //aco-report-{timestamp EST}.csv
-    //Failures
-    //Test , Browser , Expected , Got
-    //Success
 }
 
