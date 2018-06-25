@@ -15,6 +15,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 //Drivers
+import org.junit.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -27,11 +28,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.By;
 //Junits
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Test;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -50,7 +47,7 @@ public class SearchTest{
         System.setProperty(CHROME_DRIVER_KEY, CHROME_DRIVER_VALUE);
         System.setProperty(FIREFOX_DRIVER_KEY, FIREFOX_DRIVER_VALUE);
         try {
-            BufferedWriter writer = Files.newBufferedWriter(Paths.get(String.format("%s%s", OUTPUT_FILE, new SimpleDateFormat("yyyy-MM-dd HH:mm'.csv'").format(new Date()))));
+            BufferedWriter writer = Files.newBufferedWriter(Paths.get(String.format("%s%s", OUTPUT_FILE, new SimpleDateFormat("yyyy-MM-dd_HH:mm'.csv'").format(new Date()))));
             csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
                     .withHeader(RESULT, FIELD, SCOPE, QUERY, BROWSER, EXPECTED, ACTUAL));
         }
@@ -90,12 +87,13 @@ public class SearchTest{
     @Before
     public void setUpTest(){
         String browser = this.query.browser;
-        System.out.println("SET UP : " + browser);
-        if (browser.equals("Chrome")){
-            driver = new ChromeDriver();
-        }
-        else if (browser.equals("Firefox")){
-            driver = new FirefoxDriver();
+        switch(browser){
+            case "Chrome":
+                driver = new ChromeDriver();
+                break;
+            case "Firefox":
+                driver = new FirefoxDriver();
+                break;
         }
         wait = new WebDriverWait(driver, TIME_OUT);
         driver.get(HOMEPAGE);
@@ -107,7 +105,7 @@ public class SearchTest{
         try{
             search();
             result = "Success";
-        }catch (Exception e) {
+        }catch (AssertionError e) {
             result = "Failure";
             fail(e.toString());
         }finally{
@@ -123,7 +121,6 @@ public class SearchTest{
 
     @After
     public void tearDownTest(){
-        System.out.println("TEAR DOWN : " + this.query.browser);
         driver.quit();
     }
 
@@ -137,7 +134,6 @@ public class SearchTest{
     }
 
     private void search(){
-        System.out.println(query);
         wait.until(ExpectedConditions.elementToBeClickable(By.className("submit-hold")));
         //field
         Select fieldBox = new Select(driver.findElement(By.className("field-select")));
@@ -162,7 +158,8 @@ public class SearchTest{
         } catch (org.openqa.selenium.NoSuchElementException e) {
             numberOfResults = 0;
         }
-        assertTrue(String.format("Expected number of results to be greater than %d; got %d number of results", query.minNumResults, numberOfResults),numberOfResults >= query.minNumResults);
+        assertTrue(String.format("Expected number of results to be greater than %d; " +
+                "got %d number of results", query.minNumResults, numberOfResults),numberOfResults >= query.minNumResults);
     }
 }
 
