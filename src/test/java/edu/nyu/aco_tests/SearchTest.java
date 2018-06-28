@@ -59,7 +59,7 @@ public class SearchTest{
     //Build searches in query parameters.
     @Parameters
     public static ArrayList<Query> searches(){
-        ArrayList<Query> queries = new ArrayList<Query>();
+        ArrayList<Query> queries = new ArrayList<>();
         try (
             Reader reader = Files.newBufferedReader(Paths.get(CSV_FILE));
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
