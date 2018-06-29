@@ -47,7 +47,13 @@ public class SearchTest{
         System.setProperty(CHROME_DRIVER_KEY, CHROME_DRIVER_VALUE);
         System.setProperty(FIREFOX_DRIVER_KEY, FIREFOX_DRIVER_VALUE);
         try {
-            BufferedWriter writer = Files.newBufferedWriter(Paths.get(String.format("%s%s", OUTPUT_FILE, new SimpleDateFormat("yyyy-MM-dd_HH:mm'.csv'").format(new Date()))));
+            BufferedWriter writer = Files.newBufferedWriter(Paths.get(
+                            String.format(
+                                    "%s%s",
+                                    OUTPUT_FILE,
+                                    new SimpleDateFormat("yyyy-MM-dd_HH:mm'.csv'").format(new Date()))
+                            )
+            );
             csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
                     .withHeader(RESULT, FIELD, SCOPE, QUERY, BROWSER, EXPECTED, ACTUAL));
         }
@@ -70,7 +76,15 @@ public class SearchTest{
             for (CSVRecord csvRecord : csvParser) {
                 // Accessing values by Header names
                 for (String browser : BROWSERS){
-                    queries.add(new Query(csvRecord.get(FIELD), csvRecord.get(SCOPE), csvRecord.get(QUERY), Integer.parseInt(csvRecord.get(MINIMUM_NUMER_OF_RESULTS)), browser));
+                    queries.add(
+                            new Query(
+                                    csvRecord.get(FIELD),
+                                    csvRecord.get(SCOPE),
+                                    csvRecord.get(QUERY),
+                                    Integer.parseInt(csvRecord.get(MINIMUM_NUMER_OF_RESULTS)),
+                                    browser
+                            )
+                    );
                 }
             }
         }
@@ -110,7 +124,14 @@ public class SearchTest{
             fail(e.toString());
         }finally{
             try{
-                csvPrinter.printRecord(result, query.field, query.scope, query.query, query.browser, query.minNumResults, numberOfResults);
+                csvPrinter.printRecord(
+                        result,
+                        query.field,
+                        query.scope,
+                        query.query,
+                        query.browser,
+                        query.minNumResults,
+                        numberOfResults);
                 csvPrinter.flush();
             }
             catch (IOException e) {
@@ -141,7 +162,7 @@ public class SearchTest{
         //scope
         Select scopeBox = new Select(driver.findElement(By.className("scope-select")));
         scopeBox.selectByValue(query.scope);
-
+        //search query
         Actions actions = new Actions(driver);
         actions.moveToElement(driver.findElement(By.className("input-hold")));
         actions.click();
@@ -149,17 +170,20 @@ public class SearchTest{
         actions.moveToElement(driver.findElement(By.className("submit-hold")));
         actions.click();
         actions.build().perform();
-
         //Check result
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div[class='widget items']")));
         try {
-            String numFound = driver.findElement(By.cssSelector("div[class='resultsnum'] span[class='numfound']")).getText();
+            String numFound = driver.findElement(
+                    By.cssSelector("div[class='resultsnum'] span[class='numfound']")
+                    ).getText();
             numberOfResults = Integer.parseInt(numFound);
         } catch (org.openqa.selenium.NoSuchElementException e) {
             numberOfResults = 0;
         }
         assertTrue(String.format("Expected number of results to be greater than %d; " +
-                "got %d number of results", query.minNumResults, numberOfResults),numberOfResults >= query.minNumResults);
+                "got %d number of results", query.minNumResults, numberOfResults),
+                numberOfResults >= query.minNumResults
+        );
     }
 }
 
