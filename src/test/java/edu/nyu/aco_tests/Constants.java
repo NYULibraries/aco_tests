@@ -6,7 +6,9 @@ final class Constants {
     }
 
     //Drivers
-    static final String[] BROWSERS = {"Chrome","Firefox"};
+    static final String CHROME = "Chrome";
+    static final String FIREFOX = "Firefox";
+    static final String[] BROWSERS = {CHROME,FIREFOX};
     static final String CHROME_DRIVER_KEY = "webdriver.chrome.driver";
     static final String CHROME_DRIVER_VALUE = "/usr/local/Cellar/chromedriver/2.35/bin/chromedriver";
     static final String FIREFOX_DRIVER_KEY = "webdriver.gecko.driver";
@@ -25,4 +27,6 @@ final class Constants {
     static final String BROWSER = "Browser";
     static final String EXPECTED = "Expected";
     static final String ACTUAL = "Actual";
+    static final String PASS = "Success";
+    static final String FAIL = "Failure";
 }

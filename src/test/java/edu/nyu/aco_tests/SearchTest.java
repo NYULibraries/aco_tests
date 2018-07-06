@@ -102,10 +102,10 @@ public class SearchTest{
     public void setUpTest(){
         String browser = this.query.browser;
         switch(browser){
-            case "Chrome":
+            case CHROME:
                 driver = new ChromeDriver();
                 break;
-            case "Firefox":
+            case FIREFOX:
                 driver = new FirefoxDriver();
                 break;
         }
@@ -118,9 +118,9 @@ public class SearchTest{
         String result = "";
         try{
             search();
-            result = "Success";
+            result = PASS;
         }catch (AssertionError e) {
-            result = "Failure";
+            result = FAIL;
             fail(e.toString());
         }finally{
             try{
