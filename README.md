@@ -37,10 +37,24 @@ The SearchTest.java file requires an input CSV under the file path
 ```
 aco_tests/src/test/resources/search_cases.csv
 ```
+This CSV can be attained by exporting from a Google Excel Sheet
+ with the following column headers in order:
+```
+ID, Field, Scope, Query, Minimum Number of Results, Comments
+
+```
+
+*Note that the ID and Comments columns are optional but still exist.
+
 Once the test suite compiles and runs to completion, an output file with a stamp
 of the run's Date and Time under the file path
 ```
 aco_tests/src/test/resources/aco-report-YY-MM-dd_HH:mm.csv
+```
+This CSV will be written with the following column headers in order:
+
+```
+Result (Pass/Fail), Field, Scope, Query, Browser, Expected, Actual
 ```
 
 
